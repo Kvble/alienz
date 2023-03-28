@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://bckmxjh1fbnyl"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.cs" id="1_n3q7r"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_q1d04"]
+size = Vector2(400, 200)
+
+[node name="MainMenu" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -105.5
+offset_top = -50.5
+offset_right = 105.5
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n3q7r")
+
+[node name="MenuContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MenuContainer"]
+layout_mode = 2
+texture = SubResource("PlaceholderTexture2D_q1d04")
+
+[node name="HostButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="ConnectContainer" type="HBoxContainer" parent="MenuContainer"]
+layout_mode = 2
+
+[node name="IpTextBox" type="TextEdit" parent="MenuContainer/ConnectContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "xxx.xxx.xxx.xxx"
+
+[node name="ConnectButton" type="Button" parent="MenuContainer/ConnectContainer"]
+layout_mode = 2
+text = "Connect"
+
+[node name="ExitButton" type="Button" parent="MenuContainer"]
+layout_mode = 2
+text = "Exit"
+
+[connection signal="pressed" from="MenuContainer/HostButton" to="." method="_OnHostButtonPressed"]
+[connection signal="pressed" from="MenuContainer/ConnectContainer/ConnectButton" to="." method="_OnConnectButtonPressed"]
+[connection signal="pressed" from="MenuContainer/ExitButton" to="." method="_OnExitButtonPressed"]
