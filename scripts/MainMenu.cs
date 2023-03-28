@@ -1,5 +1,7 @@
 using Godot;
+using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 public partial class MainMenu : PanelContainer
 {
@@ -15,18 +17,18 @@ public partial class MainMenu : PanelContainer
     {
     }
 
-    public void _OnHostButtonPressed()
+    private void _OnHostButtonPressed()
     {
         GetTree().ChangeSceneToFile("res://scenes//HostMenu.tscn");
     }
 
-    public void _OnConnectButtonPressed()
+    private void _OnConnectButtonPressed()
     {
         var connectionIp = _ipTextBox.Text;
         Debug.WriteLine(connectionIp);
     }
 
-    public void _OnExitButtonPressed()
+    private void _OnExitButtonPressed()
     {
         GetTree().Quit();
     }
