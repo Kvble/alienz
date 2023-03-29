@@ -1,3 +1,11 @@
-[gd_scene format=3 uid="uid://camkokvuk2v1k"]
+[gd_scene load_steps=2 format=3 uid="uid://camkokvuk2v1k"]
+
+[ext_resource type="PackedScene" uid="uid://d0w0a3et6ui03" path="res://scenes/Player.tscn" id="1_lbkih"]
 
 [node name="GameScene" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_lbkih")]
+position = Vector2(562, 340)
+scale = Vector2(0.5, 0.5)
+FRICTION = 15
+MAXSPEED = 500
