@@ -14,15 +14,18 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_ro4cx"]
-radius = 48.3735
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_26txb"]
+radius = 19.0
+height = 70.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_dcqic")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 rotation = -1.5708
 sprite_frames = SubResource("SpriteFrames_jv12c")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_ro4cx")
+[node name="PlayerCollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(-7, 0)
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_26txb")

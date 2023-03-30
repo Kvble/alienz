@@ -25,7 +25,17 @@ public partial class MainMenu : PanelContainer
     private void _OnConnectButtonPressed()
     {
         var connectionIp = _ipTextBox.Text;
-        Debug.WriteLine(connectionIp);
+        try
+        {
+            var peer = new ENetMultiplayerPeer();
+            peer.CreateClient(connectionIp, 42069);
+            GetTree().GetMultiplayer().MultiplayerPeer = peer;
+            GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
     }
 
     private void _OnExitButtonPressed()

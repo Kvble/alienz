@@ -7,5 +7,3 @@
 [node name="Player" parent="." instance=ExtResource("1_lbkih")]
 position = Vector2(562, 340)
 scale = Vector2(0.5, 0.5)
-FRICTION = 15
-MAXSPEED = 500

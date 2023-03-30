@@ -6,22 +6,24 @@ using static Godot.TextServer;
 public partial class Player : CharacterBody2D
 {
 	[Export]
-	private int FRICTION = 50;
+	private float FRICTION = 800;
     [Export]
-    private int ACCELERATION = 10;
+    private int ACCELERATION = 5;
     [Export]
     private int MAXSPEED = 500;
+	[Export]
+	public string Name = "Player";
 
     private Vector2 _direction;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-	}
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		LookAt(GetGlobalMousePosition());
+        LookAt(GetGlobalMousePosition());
         _direction = GetInputAxis();
 		
 		if (_direction != Vector2.Zero)
@@ -30,7 +32,7 @@ public partial class Player : CharacterBody2D
 		}
 		else
 		{
-			ApplyFriction();
+			ApplyFriction((float)delta);
 		}
 		MoveAndSlide();
     }
@@ -43,9 +45,9 @@ public partial class Player : CharacterBody2D
 		return inputDirection.Normalized();
     }
 
-	private void ApplyFriction()
+	private void ApplyFriction(float delta)
 	{
-		Velocity = Velocity.MoveToward(Vector2.Zero, FRICTION);
+		Velocity = Velocity.MoveToward(Vector2.Zero, FRICTION * delta);
     }
 
 	private void ApplyAcceleration()
