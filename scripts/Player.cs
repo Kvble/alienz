@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Diagnostics;
-using static Godot.TextServer;
 
 public partial class Player : CharacterBody2D
 {
@@ -11,9 +10,9 @@ public partial class Player : CharacterBody2D
     private int ACCELERATION = 5;
     [Export]
     private int MAXSPEED = 500;
-	[Export]
-	public string Name = "Player";
 
+	public string Id { get; set; }
+	private Vector2 _syncPosition;
     private Vector2 _direction;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -23,6 +22,12 @@ public partial class Player : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		Debug.WriteLine("prova");
+		if (IsLocalAuthority())
+		{
+			Position = _syncPosition;
+			return;
+		}
         LookAt(GetGlobalMousePosition());
         _direction = GetInputAxis();
 		
@@ -35,6 +40,8 @@ public partial class Player : CharacterBody2D
 			ApplyFriction((float)delta);
 		}
 		MoveAndSlide();
+
+		RpcId(1, "PushToServer", Position);
     }
 
 	private static Vector2 GetInputAxis()
@@ -54,4 +61,22 @@ public partial class Player : CharacterBody2D
 	{
         Velocity = Velocity.MoveToward(_direction * MAXSPEED, ACCELERATION);
     }
+
+	private bool IsLocalAuthority()
+	{
+		return Id == GetTree().GetMultiplayer().GetUniqueId().ToString();
+	}
+
+	private void PushToServer(Vector2 position)
+	{
+		if (!GetTree().GetMultiplayer().IsServer()) 
+		{
+			return;
+		}
+		if (Id != GetTree().GetMultiplayer().GetRemoteSenderId().ToString()) 
+		{
+			return;
+		}
+		_syncPosition = position;
+	}
 }

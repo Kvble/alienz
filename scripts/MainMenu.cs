@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 
 public partial class MainMenu : PanelContainer
 {
+    public static bool IsServer { get; set; }
+    public static string ServerIp { get; set; }
     private TextEdit _ipTextBox;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -24,18 +26,9 @@ public partial class MainMenu : PanelContainer
 
     private void _OnConnectButtonPressed()
     {
-        var connectionIp = _ipTextBox.Text;
-        try
-        {
-            var peer = new ENetMultiplayerPeer();
-            peer.CreateClient(connectionIp, 42069);
-            GetTree().GetMultiplayer().MultiplayerPeer = peer;
-            GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
-        }
-        catch (Exception e)
-        {
-            Debug.WriteLine(e);
-        }
+        ServerIp = _ipTextBox.Text;
+        IsServer = false;
+        GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
     }
 
     private void _OnExitButtonPressed()

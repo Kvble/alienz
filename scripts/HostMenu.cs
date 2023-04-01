@@ -16,16 +16,7 @@ public partial class HostMenu : PanelContainer
 
 	private void _OnPlayButtonPressed()
 	{
-		try
-		{
-			var peer = new ENetMultiplayerPeer();
-			peer.CreateServer(42069, 5);
-			GetTree().GetMultiplayer().MultiplayerPeer = peer;
-            GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
-        }
-		catch (Exception e)
-		{
-            Debug.WriteLine(e);
-		}
+		MainMenu.IsServer = true;
+        GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
     }
 }
