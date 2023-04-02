@@ -8,21 +8,23 @@ public partial class GameScene : Node2D
 {
     private Node _spawner;
     private PackedScene _playerScene;
+    private MultiplayerApi _multiplayer;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
+        _multiplayer = GetTree().GetMultiplayer();
         _playerScene = ResourceLoader.Load<PackedScene>("res://scenes//Player.tscn");
         _spawner = GetTree().Root.GetNode<Node>("GameScene/Spawner");
 
         var peer = new ENetMultiplayerPeer();
         if (MainMenu.IsServer)
 		{
-            GetTree().GetMultiplayer().MultiplayerPeer.PeerConnected += CreatePlayer;
-            GetTree().GetMultiplayer().MultiplayerPeer.PeerDisconnected += DestroyPlayer;
+            _multiplayer.MultiplayerPeer.PeerConnected += CreatePlayer;
+            _multiplayer.MultiplayerPeer.PeerDisconnected += DestroyPlayer;
             if (peer.CreateServer(9999, 2) == Error.Ok)
             {
                 Debug.WriteLine("Server created.");
-                CreatePlayer(GetTree().GetMultiplayer().GetUniqueId());
+                CreatePlayer(_multiplayer.GetUniqueId());
             }
         }
         else
@@ -30,11 +32,13 @@ public partial class GameScene : Node2D
             
             if(peer.CreateClient(MainMenu.ServerIp, 9999) == Error.Ok)
             {
+
                 Debug.WriteLine("Client created.");
-                CreatePlayer(GetTree().GetMultiplayer().GetUniqueId());
+                CreatePlayer(_multiplayer.GetUniqueId());
             }
         }
-        GetTree().GetMultiplayer().MultiplayerPeer = peer;
+        
+        _multiplayer.MultiplayerPeer = peer;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,6 +50,7 @@ public partial class GameScene : Node2D
 	{
         var player = _playerScene.Instantiate();
         player.Name = id.ToString();
+        player.SetMultiplayerAuthority((int)id);
         _spawner.AddChild(player);
         Debug.WriteLine("Connected");
     }
