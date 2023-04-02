@@ -17,13 +17,14 @@ public partial class Player : CharacterBody2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
+		Debug.WriteLine($"Player {Name} created.");
+        
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		Debug.WriteLine("prova");
-		if (IsLocalAuthority())
+        if (IsLocalAuthority())
 		{
 			Position = _syncPosition;
 			return;
@@ -41,7 +42,7 @@ public partial class Player : CharacterBody2D
 		}
 		MoveAndSlide();
 
-		RpcId(1, "PushToServer", Position);
+		//RpcId(1, "PushToServer", Position);
     }
 
 	private static Vector2 GetInputAxis()

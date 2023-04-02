@@ -6,25 +6,33 @@ using System.Net.NetworkInformation;
 
 public partial class GameScene : Node2D
 {
-    private Node2D _spawner;
+    private Node _spawner;
+    private PackedScene _playerScene;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-        _spawner = GetTree().Root.GetNode<Node2D>("GameScene/Spawner");
+        _playerScene = ResourceLoader.Load<PackedScene>("res://scenes//Player.tscn");
+        _spawner = GetTree().Root.GetNode<Node>("GameScene/Spawner");
 
         var peer = new ENetMultiplayerPeer();
         if (MainMenu.IsServer)
 		{
             GetTree().GetMultiplayer().MultiplayerPeer.PeerConnected += CreatePlayer;
             GetTree().GetMultiplayer().MultiplayerPeer.PeerDisconnected += DestroyPlayer;
-            if (peer.CreateServer(42069, 2) == Error.Ok)
+            if (peer.CreateServer(9999, 2) == Error.Ok)
             {
                 Debug.WriteLine("Server created.");
+                CreatePlayer(GetTree().GetMultiplayer().GetUniqueId());
             }
         }
         else
         {
-            peer.CreateClient(MainMenu.ServerIp, 42069);
+            
+            if(peer.CreateClient(MainMenu.ServerIp, 9999) == Error.Ok)
+            {
+                Debug.WriteLine("Client created.");
+                CreatePlayer(GetTree().GetMultiplayer().GetUniqueId());
+            }
         }
         GetTree().GetMultiplayer().MultiplayerPeer = peer;
     }
@@ -36,10 +44,8 @@ public partial class GameScene : Node2D
 
 	private void CreatePlayer(long id)
 	{
-        var player = new Player()
-        {
-            Id = id.ToString(),
-        };
+        var player = _playerScene.Instantiate();
+        player.Name = id.ToString();
         _spawner.AddChild(player);
         Debug.WriteLine("Connected");
     }
