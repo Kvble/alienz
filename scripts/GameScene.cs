@@ -25,7 +25,7 @@ public partial class GameScene : Node2D
             if (peer.CreateServer(9999, 2) == Error.Ok)
             {
                 Debug.WriteLine("Server created.");
-                CreatePlayer(_multiplayer.GetUniqueId());
+                //CreatePlayer(_multiplayer.GetUniqueId());
             }
         }
         else
@@ -34,6 +34,7 @@ public partial class GameScene : Node2D
             {
 
                 Debug.WriteLine($"Connected to {MainMenu.ServerIp}:9999");
+
                 //CreatePlayer(_multiplayer.GetUniqueId());
             }
         }
@@ -51,12 +52,12 @@ public partial class GameScene : Node2D
         player.Name = id.ToString();
         player.MultiplayerId = (int)id;
 
-        player.SetMultiplayerAuthority((int)id);
+        //player.SetMultiplayerAuthority((int)id);
         
-        Debug.WriteLine($"UniqueId: {id}");
-        Debug.WriteLine($"Authority: {player.GetMultiplayerAuthority()}");
         _spawner.AddChild(player);
         Debug.WriteLine($"Player {player.Name} created.");
+        Debug.WriteLine($"UniqueId: {id}");
+        Debug.WriteLine($"Authority: {player.GetMultiplayerAuthority()}");
     }
 
     private void DestroyPlayer(long id)

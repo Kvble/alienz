@@ -24,7 +24,6 @@ public partial class Player : CharacterBody2D
 	{
         if (!IsLocalAuthority())
 		{
-			Position = _syncPosition;
 			return;
 		}
         LookAt(GetGlobalMousePosition());
@@ -61,6 +60,6 @@ public partial class Player : CharacterBody2D
 
 	private bool IsLocalAuthority()
 	{
-		return GetMultiplayerAuthority() == MultiplayerId;
+		return GetMultiplayerAuthority() == Multiplayer.GetUniqueId();
 	}
 }
