@@ -11,7 +11,7 @@ public partial class Player : CharacterBody2D
     [Export]
     private int MAXSPEED = 500;
 
-	public string Id { get; set; }
+	public int MultiplayerId { get; set; }
 	private Vector2 _syncPosition;
     private Vector2 _direction;
     // Called when the node enters the scene tree for the first time.
@@ -22,7 +22,7 @@ public partial class Player : CharacterBody2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-        if (IsLocalAuthority())
+        if (!IsLocalAuthority())
 		{
 			Position = _syncPosition;
 			return;
@@ -39,8 +39,6 @@ public partial class Player : CharacterBody2D
 			ApplyFriction((float)delta);
 		}
 		MoveAndSlide();
-
-		//RpcId(1, "PushToServer", Position);
     }
 
 	private static Vector2 GetInputAxis()
@@ -63,19 +61,6 @@ public partial class Player : CharacterBody2D
 
 	private bool IsLocalAuthority()
 	{
-		return Id == GetTree().GetMultiplayer().GetUniqueId().ToString();
-	}
-
-	private void PushToServer(Vector2 position)
-	{
-		if (!GetTree().GetMultiplayer().IsServer()) 
-		{
-			return;
-		}
-		if (Id != GetTree().GetMultiplayer().GetRemoteSenderId().ToString()) 
-		{
-			return;
-		}
-		_syncPosition = position;
+		return GetMultiplayerAuthority() == MultiplayerId;
 	}
 }

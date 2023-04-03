@@ -47,13 +47,12 @@ public partial class GameScene : Node2D
 
 	private void CreatePlayer(long id)
 	{
-        var player = _playerScene.Instantiate();
+        var player = (Player)_playerScene.Instantiate();
         player.Name = id.ToString();
+        player.MultiplayerId = (int)id;
 
-        if (player.GetMultiplayerAuthority() != (int)id)
-        {
-            player.SetMultiplayerAuthority((int)id);
-        }
+        player.SetMultiplayerAuthority((int)id);
+        
         Debug.WriteLine($"UniqueId: {id}");
         Debug.WriteLine($"Authority: {player.GetMultiplayerAuthority()}");
         _spawner.AddChild(player);
