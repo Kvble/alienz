@@ -17,6 +17,7 @@ public partial class HostMenu : PanelContainer
 	private void _OnPlayButtonPressed()
 	{
 		MainMenu.IsServer = true;
+		GetTree().Root.Title += " HOST";
         GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
     }
 }
