@@ -17,10 +17,11 @@ public partial class GameScene : Node2D
         _spawner = GetTree().Root.GetNode<Node>("GameScene/Spawner");
 
         var peer = new ENetMultiplayerPeer();
+        
         if (MainMenu.IsServer)
 		{
-            _multiplayer.MultiplayerPeer.PeerConnected += CreatePlayer;
-            _multiplayer.MultiplayerPeer.PeerDisconnected += DestroyPlayer;
+            peer.PeerConnected += CreatePlayer;
+            peer.PeerDisconnected += DestroyPlayer;
             if (peer.CreateServer(9999, 2) == Error.Ok)
             {
                 Debug.WriteLine("Server created.");
@@ -29,15 +30,13 @@ public partial class GameScene : Node2D
         }
         else
         {
-            
             if(peer.CreateClient(MainMenu.ServerIp, 9999) == Error.Ok)
             {
 
-                Debug.WriteLine("Client created.");
-                CreatePlayer(_multiplayer.GetUniqueId());
+                Debug.WriteLine($"Connected to {MainMenu.ServerIp}:9999");
+                //CreatePlayer(_multiplayer.GetUniqueId());
             }
         }
-        
         _multiplayer.MultiplayerPeer = peer;
     }
 
@@ -52,12 +51,12 @@ public partial class GameScene : Node2D
         player.Name = id.ToString();
         player.SetMultiplayerAuthority((int)id);
         _spawner.AddChild(player);
-        Debug.WriteLine("Connected");
+        Debug.WriteLine($"Player {player.Name} created.");
     }
 
     private void DestroyPlayer(long id)
     {
         _spawner.GetNode(id.ToString()).QueueFree();
-        Debug.WriteLine("Disconnected");
+        Debug.WriteLine($"Player {id} destroyed.");
     }
 }
