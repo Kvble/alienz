@@ -1,3 +1,4 @@
+using alienz.scripts;
 using Godot;
 using System;
 using System.Diagnostics;
@@ -8,37 +9,18 @@ public partial class GameScene : Node2D
 {
     private Node _spawner;
     private PackedScene _playerScene;
-    private MultiplayerApi _multiplayer;
+    
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-        _multiplayer = GetTree().GetMultiplayer();
         _playerScene = ResourceLoader.Load<PackedScene>("res://scenes//Player.tscn");
         _spawner = GetTree().Root.GetNode<Node>("GameScene/Spawner");
-
-        var peer = new ENetMultiplayerPeer();
         
-        if (MainMenu.IsServer)
+        if (MultiplayerManager.IsServer)
 		{
-            peer.PeerConnected += CreatePlayer;
-            peer.PeerDisconnected += DestroyPlayer;
-            if (peer.CreateServer(9999, 2) == Error.Ok)
-            {
-                Debug.WriteLine("Server created.");
-                //CreatePlayer(_multiplayer.GetUniqueId());
-            }
+            MultiplayerManager.ServerCreatePlayer += CreatePlayer;
+            MultiplayerManager.ServerDestroyPlayer += DestroyPlayer;
         }
-        else
-        {
-            if(peer.CreateClient(MainMenu.ServerIp, 9999) == Error.Ok)
-            {
-
-                Debug.WriteLine($"Connected to {MainMenu.ServerIp}:9999");
-
-                //CreatePlayer(_multiplayer.GetUniqueId());
-            }
-        }
-        _multiplayer.MultiplayerPeer = peer;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -50,10 +32,6 @@ public partial class GameScene : Node2D
 	{
         var player = (Player)_playerScene.Instantiate();
         player.Name = id.ToString();
-        player.MultiplayerId = (int)id;
-
-        //player.SetMultiplayerAuthority((int)id);
-        
         _spawner.AddChild(player);
         Debug.WriteLine($"Player {player.Name} created.");
         Debug.WriteLine($"UniqueId: {id}");

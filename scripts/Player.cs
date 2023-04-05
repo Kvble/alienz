@@ -11,21 +11,18 @@ public partial class Player : CharacterBody2D
     [Export]
     private int MAXSPEED = 500;
 
-	public int MultiplayerId { get; set; }
-	private Vector2 _syncPosition;
     private Vector2 _direction;
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-	{
+
+    public override void _EnterTree()
+    {
+        SetMultiplayerAuthority(int.Parse(Name));
     }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
 	{
-        if (!IsLocalAuthority())
-		{
-			return;
-		}
+        if (!IsMultiplayerAuthority()) return;
+
         LookAt(GetGlobalMousePosition());
         _direction = GetInputAxis();
 		
@@ -60,6 +57,6 @@ public partial class Player : CharacterBody2D
 
 	private bool IsLocalAuthority()
 	{
-		return GetMultiplayerAuthority() == Multiplayer.GetUniqueId();
+		return GetMultiplayerAuthority() == MultiplayerId;
 	}
 }

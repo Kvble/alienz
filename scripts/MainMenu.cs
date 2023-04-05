@@ -1,3 +1,4 @@
+using alienz.scripts;
 using Godot;
 using System;
 using System.Diagnostics;
@@ -5,8 +6,7 @@ using System.Text.RegularExpressions;
 
 public partial class MainMenu : PanelContainer
 {
-    public static bool IsServer { get; set; }
-    public static string ServerIp { get; set; }
+    
     private TextEdit _ipTextBox;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -26,8 +26,8 @@ public partial class MainMenu : PanelContainer
 
     private void _OnConnectButtonPressed()
     {
-        ServerIp = _ipTextBox.Text;
-        IsServer = false;
+        MultiplayerManager.InitializeClient(_ipTextBox.Text, 9999);
+        GetTree().GetMultiplayer().MultiplayerPeer = MultiplayerManager.MultiplayerPeer;
         GetTree().ChangeSceneToFile("res://scenes//GameScene.tscn");
     }
 
